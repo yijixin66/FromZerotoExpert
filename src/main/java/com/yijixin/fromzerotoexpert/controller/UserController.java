@@ -21,10 +21,13 @@ public class UserController {
     @ResponseBody
     public String hello(HttpServletRequest request, HttpServletResponse response) {
         Cookie[] cookies = request.getCookies();
-        for (Cookie cookie : cookies) {
-            if (cookie.getName().equals("has_accessed")
-                    && cookie.getValue().equals("hafzte")) {
-                return "嗨，欢迎您再次到 from zero to expert.";
+        //注意判空
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals("has_accessed")
+                        && cookie.getValue().equals("hafzte")) {
+                    return "嗨，欢迎您再次到 from zero to expert.";
+                }
             }
         }
         Cookie cookie = new Cookie("has_accessed", "hafzte");
