@@ -74,18 +74,18 @@
     <div class="login-wrapper">
         <div class="header">注册</div>
         <div class="form-wrapper">
-            <form action="/Register" method="post">
+            <form id = "formId" action="/Register" method="post">
                 <input type="text"  id = "username" name="username" placeholder="请输入用户名" class="input-item">
                 <input type="password" id = "password" name="password" placeholder="请输入密码" class="input-item">
 
                 <input id="btnSubmit" type="button" value="注册" class="btn">
-
+                <div class="msg">
+                    已有账户，点击
+                    <a href="/FromZerotoExpert/login.html">登录</a>
+                </div>
             </form>
         </div>
-        <div class="msg">
-            已有账户，点击
-            <a href="/FromZerotoExpert/login.html">登录</a>
-        </div>
+
 
         <div class="msg" style="display: none" id = "gotoLogin">
             注册成功，点击
@@ -106,6 +106,7 @@
             dataType:"json",
             success:function (json) {
                 if (json.status=="10000") {
+                    $("#formId").hide();
                     $("#gotoLogin").show();
                 } else {
                     alert(json.msg);
