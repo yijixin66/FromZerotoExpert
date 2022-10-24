@@ -23,18 +23,12 @@ public class UserServiceImpl implements UserService {
     private UserMapper userMapper;
     @Override
     public void register(String username, String password) throws FzteException {
-        //判空
-        if (StringUtils.isEmpty(username)) {
-            throw new FzteException(FzteExceptionEnum.NEED_USERNAME);
-        }
-        if (StringUtils.isEmpty(password)) {
-            throw new FzteException(FzteExceptionEnum.NEED_USERNAME);
-        }
-        //密码限制
-//        if (password)
 
         //检测用户名是否重复
-
+        User oldUser = userMapper.selectByName(username);
+        if (oldUser != null) {
+            throw new FzteException(FzteExceptionEnum.NAME_EXISTED);
+        }
         //插入
         User user = new User();
         user.setUsername(username);

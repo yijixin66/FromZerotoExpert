@@ -3,6 +3,7 @@ package com.yijixin.fromzerotoexpert.controller;
 import com.yijixin.fromzerotoexpert.common.ApiRestResponse;
 import com.yijixin.fromzerotoexpert.exception.FzteException;
 import com.yijixin.fromzerotoexpert.service.UserService;
+import com.yijixin.fromzerotoexpert.util.CheckUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -52,6 +53,7 @@ public class UserController {
         response.addCookie(cookie);
         return "嗨，欢迎您来到 from zero to expert.";
     }
+
     /***
      * todo
      * #Description 登录模块
@@ -66,6 +68,8 @@ public class UserController {
     public ApiRestResponse register(
             @RequestParam("username") String username,
             @RequestParam("password") String password) throws FzteException {
+        CheckUtils.checkUsername(username);
+        CheckUtils.checkPassword(password);
         userService.register(username, password);
         return ApiRestResponse.success();
     }

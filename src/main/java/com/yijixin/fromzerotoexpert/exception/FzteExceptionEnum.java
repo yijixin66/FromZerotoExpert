@@ -11,6 +11,11 @@ public enum FzteExceptionEnum {
     NEED_USERNAME(10001, "用户名不能空"),
     NEED_PASSWORD(10002, "密码不能空"),
     INSERT_FAILED(10003, "插入失败"),
+    USERNAME_TOO_LONG(10004, "用户名不能超过15个字符"),
+    WRONG_PASSWORD_LENGTH(10005, "密码的长度必须6~16位"),
+    NAME_EXISTED(10006, "用户名已存在"),
+    WRONG_PASSWORD(10007, "密码不合法"),
+    SENSITIVE_NAME(10008, "用户名含敏感词"),
     SYSTEM_ERROR(20000, "系统故障")
     ;
     private Integer code;
