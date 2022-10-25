@@ -1,5 +1,10 @@
 package com.yijixin.fromzerotoexpert.common;
 
+import com.yijixin.fromzerotoexpert.model.dao.DisallowWordMapper;
+import org.mybatis.spring.annotation.MapperScan;
+import org.springframework.stereotype.Component;
+
+import javax.annotation.Resource;
 import java.util.*;
 
 /**
@@ -9,7 +14,7 @@ import java.util.*;
  * @Date 2022/10/24 20:55
  * @Created by 忆霁昕
  */
-
+@Component
 public class AcTrie {
     class AcNode {
         public char data;
@@ -18,13 +23,22 @@ public class AcTrie {
         public boolean end = false;
         public AcNode fail;
 
+        public AcNode() {
+
+        }
         public AcNode(char data) {
             this.data = data;
         }
     }
 
-    private AcNode root = new AcNode('/');
-
+    private AcNode root = new AcNode();
+    //根据字符串数组构建ac自动机
+    public void build(List<String> list) {
+        for (String s : list) {
+            insert(s);
+        }
+        buildFail();
+    }
     //插入一个字符串
     public void insert(String text) {
         AcNode p = root;
@@ -39,13 +53,7 @@ public class AcTrie {
         p.end = true;
     }
 
-    //根据字符串数组构建ac自动机
-    public void build(String[] texts) {
-        for (String text : texts) {
-            insert(text);
-        }
-        buildFail();
-    }
+
     public void buildFail() {
         //层序遍历
         Queue<AcNode> queue = new LinkedList<>();
@@ -119,23 +127,4 @@ public class AcTrie {
         return false;
     }
 
-
-    public static void main(String[] args) {
-        AcTrie acTrie = new AcTrie();
-//        acTrie.insert("abcde");
-//        acTrie.insert("abfe");
-//        System.out.println(acTrie.find("abcde"));
-//        System.out.println(acTrie.find("abfe"));
-//        System.out.println(acTrie.find("abf"));
-        acTrie.build(FzteConstant.SENSITIVE_KEYS);
-        //尼玛，站长，国家领导人，操
-        System.out.println(acTrie.match("asda尼bi玛de"));
-        System.out.println(acTrie.match("sd国家领导人rew"));
-
-        System.out.println(acTrie.match("dads尼玛"));
-//        System.out.println(acTrie.find("asda尼bi玛de"));
-//        System.out.println(acTrie.find("sd国家领导人rew"));
-//
-//        System.out.println(acTrie.find("dads尼玛"));
-    }
 }

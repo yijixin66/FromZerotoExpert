@@ -5,7 +5,11 @@ import com.yijixin.fromzerotoexpert.common.ApiRestResponse;
 import com.yijixin.fromzerotoexpert.common.FzteConstant;
 import com.yijixin.fromzerotoexpert.exception.FzteException;
 import com.yijixin.fromzerotoexpert.exception.FzteExceptionEnum;
+import com.yijixin.fromzerotoexpert.model.dao.DisallowWordMapper;
+import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
+
+import javax.annotation.Resource;
 
 /**
  * @Classname CheckUtils
@@ -14,12 +18,23 @@ import org.springframework.util.StringUtils;
  * @Date 2022/10/15 11:06
  * @Created by 忆霁昕
  */
+@Component
 public class CheckUtils {
-    private static AcTrie acTrie = new AcTrie();
-    static {
-        acTrie.build(FzteConstant.SENSITIVE_KEYS);
+    private static AcTrie acTrie;
+    @Resource
+    public void setAcTrie(AcTrie acTrie) {
+        CheckUtils.acTrie = acTrie;
+        //根据敏感词库初始化ac自动机
+        acTrie.build(disallowWordMapper.selectAllValue());
+
     }
 
+
+    private static DisallowWordMapper disallowWordMapper;
+    @Resource
+    public void setDisallowWordMapper(DisallowWordMapper disallowWordMapper) {
+        CheckUtils.disallowWordMapper = disallowWordMapper;
+    }
     /***
      * todo
      * #Description 无返回值 检测用户名是否合法 不合法直接抛出异常
