@@ -1,9 +1,6 @@
 package com.yijixin.fromzerotoexpert.common;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @Classname ACTrie
@@ -47,8 +44,36 @@ public class AcTrie {
         for (String text : texts) {
             insert(text);
         }
+        buildFail();
     }
-
+    public void buildFail() {
+        //层序遍历
+        Queue<AcNode> queue = new LinkedList<>();
+        root.fail = null;
+        queue.add(root);
+        while (!queue.isEmpty()) {
+            AcNode p = queue.remove();
+            for (AcNode pc : p.children.values()) {
+                if (p == root) {
+                    pc.fail = root;
+                } else {
+                    AcNode q = p.fail;
+                    while (q != null) {
+                        AcNode qc = q.children.get(pc.data);
+                        if (qc != null) {
+                            pc.fail = qc;
+                            break;
+                        }
+                        q = q.fail;
+                    }
+                    if (q == null) {
+                        pc.fail = root;
+                    }
+                }
+                queue.add(pc);
+            }
+        }
+    }
     //查找该字符的子串是否存在
     public boolean find(String text) {
         AcNode p = root;
@@ -63,12 +88,33 @@ public class AcTrie {
                     return true;
                 }
             } else {
+                //没有匹配上 回退
                 i++;
                 j = i;
                 p = root;
-
             }
 
+        }
+        return false;
+    }
+    public boolean match (String text) {
+        AcNode p = root;
+        for (int i = 0; i < text.length(); i++) {
+            char key = text.charAt(i);
+            while (!p.children.containsKey(key) && p != root) {
+                p = p.fail;
+            }
+            p = p.children.get(key);
+            if (p == null) {
+                p = root;
+            }
+            AcNode tmp = p;
+            while (tmp != null) {
+                if (tmp.end) {
+                    return true;
+                }
+                tmp = tmp.fail;
+            }
         }
         return false;
     }
@@ -83,9 +129,13 @@ public class AcTrie {
 //        System.out.println(acTrie.find("abf"));
         acTrie.build(FzteConstant.SENSITIVE_KEYS);
         //尼玛，站长，国家领导人，操
-        System.out.println(acTrie.find("asda尼bi玛de"));
-        System.out.println(acTrie.find("sd国家领导人rew"));
+        System.out.println(acTrie.match("asda尼bi玛de"));
+        System.out.println(acTrie.match("sd国家领导人rew"));
 
-        System.out.println(acTrie.find("dads尼玛"));
+        System.out.println(acTrie.match("dads尼玛"));
+//        System.out.println(acTrie.find("asda尼bi玛de"));
+//        System.out.println(acTrie.find("sd国家领导人rew"));
+//
+//        System.out.println(acTrie.find("dads尼玛"));
     }
 }

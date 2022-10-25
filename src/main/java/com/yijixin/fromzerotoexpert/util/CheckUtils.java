@@ -38,7 +38,7 @@ public class CheckUtils {
             throw new FzteException(FzteExceptionEnum.USERNAME_TOO_LONG);
         }
         //敏感词过滤
-        if (acTrie.find(username)) {
+        if (acTrie.match(username)) {
             throw new FzteException(FzteExceptionEnum.SENSITIVE_NAME);
         }
     }
